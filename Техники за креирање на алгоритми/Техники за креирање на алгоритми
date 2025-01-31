@@ -1,0 +1,536 @@
+1.
+Дадени се Н цифри. Да се напише алгоритам кој ќе го даде најголемиот можен број составен од тие цифри.
+Влез: Првиот број од влезот е бројот на цифри N, а потоа во следниот ред се цифрите.
+Излез: Најголемиот број кој може да се состави од тие цифри
+/
+We are given N digits. Write an algorithm that composes the largest possible number from those digits.
+Input: The first number in the input is the number of digits N, then in the next line are the given digits.
+Output: The maximum possible number containing those digits
+
+For example:
+Input 	
+5
+1 2 3 4 5
+Result
+54321
+
+7
+9 7 3 7 9 3 1
+Result
+9977331
+
+public static void main(String []args){
+    Scanner scanner=new Scanner(System.in);
+    int n=scanner.nextInt();
+    scanner.nextLine();
+    String [] digits=scanner.nextLine().split(" ");
+    Arrays.sort(digits,(a,b)->b.compareTo(a));
+StringBuilder result=new StringBuilder();
+for (String digit:digits){
+    result.append(digit);
+}
+    System.out.println(result.toString());
+}
+}
+
+DRUG NACIN racno so Bubble sort:
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class LargestPossibleNumberManualSort {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read the number of digits
+        int n = scanner.nextInt();
+        scanner.nextLine();  // Consume the newline
+
+        ArrayList<String> digits = new ArrayList<>();
+
+        // Read input and populate the list
+        String[] input = scanner.nextLine().split(" ");
+        for (String digit : input) {
+            digits.add(digit);
+        }
+
+        for (int i = 0; i < digits.size() - 1; i++) {
+            for (int j = 0; j < digits.size() - i - 1; j++) {
+                // Compare and swap if needed
+                if (digits.get(j).compareTo(digits.get(j + 1)) < 0) {
+                    // Swap elements
+                    String temp = digits.get(j);
+                    digits.set(j, digits.get(j + 1));
+                    digits.set(j + 1, temp);
+                }
+            }
+        }
+
+        // Build and display the result
+        StringBuilder result = new StringBuilder();
+        for (String digit : digits) {
+            result.append(digit);
+        }
+
+        System.out.println(result.toString());
+
+        scanner.close();
+    }
+}
+
+2.
+Дадени се N возови со време на пристигање и поаѓање. Да се најде минималниот број на платформи потребен за да се сместат тие возови.
+Влез: Првиот број од влезот е бројот на возови N, а потоа во следниот ред минутата на пристигнување и минутата на поаѓање на возот.
+Излез: Најмалиот потребен број на платформи за да се сместат сите возови
+/
+We are given N trains. Write an algorithm that finds the minimum number of platforms needed to schedule those trains.
+Input: The first number in the input is the number of trains N, then in the next N lines are the arrival and departure minutes for each of the trains.
+Output: The minimum number of needed platforms to accommodate the trains.
+For example:
+Input 	
+
+5
+1 2
+1 2
+5 10
+11 14
+15 20
+Result
+2
+
+5
+1 2
+2 3
+3 4
+4 5
+5 6
+Result
+2
+import java.util.*;
+
+public class MinimumPlatforms {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();  
+        int[] arrivals = new int[n];
+        int[] departures = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arrivals[i] = scanner.nextInt();
+            departures[i] = scanner.nextInt();
+        }
+
+        System.out.println(findMinimumPlatforms(arrivals, departures));
+
+        scanner.close();
+    }
+
+    public static int findMinimumPlatforms(int[] arrivals, int[] departures) {
+        Arrays.sort(arrivals);
+        Arrays.sort(departures);
+
+        int platformsNeeded = 0, maxPlatforms = 0;
+        int i = 0, j = 0;
+
+        while (i < arrivals.length && j < departures.length) {
+            if (arrivals[i] <= departures[j]) {  
+                platformsNeeded++;
+                i++;
+                maxPlatforms = Math.max(maxPlatforms, platformsNeeded);
+            } else {
+                platformsNeeded--;
+                j++;
+            }
+        }
+
+        return maxPlatforms;
+    }
+}
+
+3.
+Дадени се N задачи кои треба да се изработат. За секоја од задачите го знаеме времето за изработка (во часови) и заработката која ја носи. Да се најде максималната заработка во рок од една 40 часовна работна недела. 
+Напомена дека и делумно сработени задачи носат делумна заработка, во зависност од процентот на завршеност.
+Влез: Првиот број од влезот е бројот на задачи N, а потоа во следниот ред времетраењето на задачата во часови и заработката која ја носи.
+Излез: Максимална заработка која можеме да ја направиме за 40 часа.
+/
+We are given N tasks with estimated completion time and the amount we can earn from that task. Write an algorithm that finds the maximum earnings we can have for 40 hours. Note that we can have a partial earning from a partially completed task.
+Input: The first number in the input is the number of tasks N, then in the next N lines are the time needed for the task and the amount of money we can earn from it.
+Output: The maximum amount we can earn in 40 hours
+
+For example:
+Input 	
+
+3
+10 60
+20 100
+30 120
+Result
+200
+
+1
+10 60
+Result
+60
+
+import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+public class Main {
+
+public static void main(String []args){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+double[] timeTask=new double[n];
+double[] earningTask=new double[n];
+
+    for (int i = 0; i <n ; i++) {
+        timeTask[i]=sc.nextDouble();
+        earningTask[i]=sc.nextDouble();
+    }
+
+    double[] earningPerHour=new double[n];
+    for (int i = 0; i <n ; i++) {
+        earningPerHour[i]=earningTask[i]/timeTask[i];
+    }
+    List<Task>tasks=new ArrayList<>();
+    for (int i = 0; i < n; i++) {
+        tasks.add(new Task(timeTask[i],earningTask[i],earningPerHour[i]));
+    }
+tasks.sort((a,b)->Double.compare(b.earningPerHour,a.earningPerHour));
+    double maxEarnings = 0;
+    double availableHours = 40;
+    for(Task task:tasks){
+        if (availableHours==0) break;
+        double timeTaken=Math.min(availableHours,task.time);
+        maxEarnings+=timeTaken*task.earningPerHour;
+        availableHours-=timeTaken;
+    }
+    System.out.printf("%.0f\n", maxEarnings);
+
+    sc.close();
+}
+
+static class Task{
+    double time;
+    double earning;
+    double earningPerHour;
+    public Task(double time,double earning,double earningPerHour){
+        this.time=time;
+        this.earning=earning;
+        this.earningPerHour=earningPerHour;
+    }
+}
+}
+
+4.
+Дадени се N состаноци со време на почеток и крај. Да се најде минималниот број на сали за состаноци потребен за да се одржат сите состаноци.
+Влез: Првиот број од влезот е бројот на состаноци N, а потоа во следниот ред минутата на почнување и минутата на завршување на состанокот.
+Излез: Најмалиот потребен број на соби за состаноци за да можат да се одржат сите состаноци
+/
+We are given N scheduled meetings. Write an algorithm that finds the minimum number of meeting rooms needed to schedule those meetings.
+Input: The first number in the input is the number of meetings N, then in the next N lines are the start and end time for each of the meetings.
+Output: The minimum number of needed meeting rooms to schedule the meetings.
+
+
+For example:
+Input 	
+
+5
+1 2
+1 2
+5 10
+11 14
+15 20
+Result
+2
+
+5
+1 2
+2 3
+3 4
+4 5
+5 6
+Result
+2
+import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+int[] meetingStart=new int[n];
+int[] meetingEnds=new int[n];
+        for (int i = 0; i < n; i++) {
+            meetingStart[i]=sc.nextInt();
+            meetingEnds[i]=sc.nextInt();
+        }
+
+        System.out.println(minNumMeetingRooms(meetingStart,meetingEnds));
+        sc.close();
+
+    }
+
+    public static int minNumMeetingRooms(int[] meetingStart, int[] meetingEnds) {
+Arrays.sort(meetingStart);
+Arrays.sort(meetingEnds);
+        int meetingRooms = 0, maxMeetingRoom = 0;
+        int i = 0, j = 0;
+        while (i < meetingStart.length && j < meetingEnds.length) {
+            if (meetingStart[i] <= meetingEnds[j]) {
+                meetingRooms++;
+                i++;
+                maxMeetingRoom = Math.max(maxMeetingRoom, meetingRooms);
+
+            } else {
+                meetingRooms--;
+                j++;
+            }
+        }
+return maxMeetingRoom;
+    }
+}
+
+5.
+Дадена е улица на која има поставено места за улични светилки. Улицата е со должина М и има N такви места на кои можат да се постават улични светилки и нивната позиција е дадена во една низа.
+Ако знаеме дека една светилка освен својата позиција осветлува и уште две позиции во лево и две во десно, да се најде најмалиот број на светилки со кои може да се осветли улицата. 
+Не мора да поставуваме светлика на секоја можна позиција.
+Влез: Првиот број од влезот е бројот на позиции за светилки N и должината на улицата М, а потоа во следниот ред се дадени можните позиции за поставување на светилки.
+Излез: Минимален број на светилки за да се осветли улицата.
+/
+We are given a street with N possible positions on which we can put a light. A single light will illuminate its own position and 2 more positions to the left and 2 more to the right of it. Our task is to illuminate the street with the minimum possible lights. Not all possible positions must contain light.
+Input: The first number in the input is the number of possible positions to put a light bulb N and the length of the street M, then in the next line are the possible positions on which we can put a light. 
+Output: The minimum lights we need to illuminate the street.
+For example:
+Input 	
+5 5
+1 2 3 4 5
+Result
+1
+
+3 10
+3 8 9
+Result
+2
+
+
+
+
+6.
+Даден е бинарен стринг S. Бинарен стринг е стринг којшто во себе соджи само ‘1’ и ‘0’. Подстринг на бинарен стринг се нарекува позитивен ако бројот на '1' во подстрингот е строго поголем од бројот на '0'. 
+Да се испечати бројот на позитивни подстрингови за внесениот стринг.
+Влез: Во првиот ред на влезот е должината на стрингот N. Во вториот ред е бинарниот стринг S
+5
+10011
+Излез: На излез треба да се испечати бројот на позитивни подстрингови во S
+6
+Објаснување: За дадениот стринг 10011, позитивни подстрингови се:
+    1(позиција 0)
+    1(позиција 3)
+    1 (позиција 4)
+    11 (позиции 3 и 4)
+    011 (позиции 2 до 4)
+    10011 (целиот стринг)
+
+
+You are given a binary string S. A binary string is a string that contains only '1's and '0's. A substring of a binary string is called positive if the number of '1's in the substring is strictly greater than the number of '0's. Print the number of positive substrings for the given string.
+Input: The first line of the input contains the length of the string N. The second line contains the binary string S.
+5
+10011
+Output: The output should print the number of positive substrings in S
+6
+Explanation: For the given string 10011, the positive substrings are:
+    1(position 0)
+    1(position 3)
+    1 (position 4)
+    11 (positions 3 и 4)
+    011 (positions from 2 to 4)
+    10011 (the entire string)
+For example:
+Input 	
+5
+10011
+Result
+6
+
+3
+101
+Result
+3
+import java.util.Scanner;
+
+public class PositiveSubstrings {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        String s = scanner.next();
+        scanner.close();
+
+        int result = countPositiveSubstrings(n, s);
+
+        System.out.println(result);
+    }
+
+    public static int countPositiveSubstrings(int n, String s) {
+        int positiveCount = 0;
+
+        for (int start = 0; start < n; start++) {
+            int count1s = 0;
+            int count0s = 0;
+
+            for (int end = start; end < n; end++) {
+                // Count 1s and 0s in the current substring
+                if (s.charAt(end) == '1') {
+                    count1s++;
+                } else {
+                    count0s++;
+                }
+
+                if (count1s > count0s) {
+                    positiveCount++;
+                }
+            }
+        }
+
+        return positiveCount;
+    }
+}
+
+7.
+
+8.
+Колку најмалку пати треба да одземеме квадрат на цел број за некој број Х да стане 0?
+
+Влез: Цел број Х од 1 до 10^5.
+
+Излез: Бараниот резултат.
+
+Примери:
+
+Влез 	Излез 	Објаснување
+
+13
+
+	
+
+2
+
+	
+
+13 - 2*2  = 9 ;   9 - 3*3  = 0. (одземавме 2 пати)
+
+21
+
+	
+
+3
+
+	
+
+21 - 2*2  = 17;  17 - 4*4 = 1;  1 - 1*1 = 0. (одземавме 3 пати)
+
+25
+
+	
+
+1
+
+	
+
+25 - 5*5 = 0 . (одземавме 1 пат)
+
+32
+
+	
+
+16
+
+	
+
+32 - 4*4 = 16;  16 - 4*4 = 0. (одземавме 2 пати)
+
+---------------------------------------------------------------------------
+
+What is the minimum number of times we need to subtract the square of an integer for a number X to become 0?
+
+Input: Integer X from 1 to 10^5.
+
+Output: The desired result.
+
+Examples:
+
+Input	Output	Explanation
+
+13
+
+	
+
+2
+
+	
+
+13 - 2*2  = 9 ;   9 - 3*3  = 0. (we subtracted 2 times)
+
+21
+
+	
+
+3
+
+	
+
+21 - 2*2  = 17;  17 - 4*4 = 1;  1 - 1*1 = 0. (we subtracted 3 times)
+
+25
+
+	
+
+1
+
+	
+
+25 - 5*5 = 0 . (we subtracted 1 time)
+
+32
+
+	
+
+16
+
+	
+
+32 - 4*4 = 16;  16 - 4*4 = 0. (we subtracted 2 times)
+import java.util.Scanner;
+import java.util.Scanner;
+import java.util.Arrays;
+
+public class Task3 {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int X = input.nextInt();
+
+        // DP array to store the minimum steps for each number
+        int[] dp = new int[X + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE); // Initialize with large value
+        dp[0] = 0; // Base case: 0 requires 0 steps
+
+        for (int i = 1; i <= X; i++) {
+            for (int j = 1; j * j <= i; j++) {
+                dp[i] = Math.min(dp[i], dp[i - j * j] + 1);
+            }
+        }
+
+        System.out.println(dp[X]);
+        input.close();
+    }
+}
+
+
