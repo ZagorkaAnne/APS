@@ -1,0 +1,511 @@
+1.
+Дадена е еднострана поврзана листа од броеви со дупликати. За дадена вредност на info поле во листата, да се обезбеди бројот на повторувања на тој број да биде парен. Доколку за дадената вредност на инфо полето, 
+бројот на елементи со таа вредност е непарен, треба да се додаде истиот елемент пред првото појавување на елементот со таа вредност  во листата.
+Забелешка: 0 е парен број. 
+
+Влез:
+Во првиот ред се внесуваат бројот на елементи во листата, па потоа самите елементи, а на крај се внесува бројот (вредноста) кој ќе се осигураме дека се појавува парен број на пати.
+
+Излез:
+Листата со парен број на дупликати за дадената вредност
+
+Примери:
+
+Влез:
+6
+1 2 5 7 9 12
+7
+Излез:
+1 2 5 7 7 9 12
+
+Влез:
+8
+7 1 2 7 5 9 7 12
+7
+Излез:
+7 7 1 2 7 5 9 7 12
+/
+A single linked list of duplicate numbers is given. For a given value of an info field in the list, ensure that the number of repetitions (duplicates) of that number is even. If for the given value of the info field, the number of elements with that value is odd, an element with the same value should be added before the first appearance of the value.
+Note: 0 is an even number.
+Input: In the first line, the number of elements in the list are given, then the elements themselves, and finally, the number (value) that will ensure that it appears an even number of times.
+Output: The list with an even number of duplicates for a given value is printed on output.
+
+Examples:
+Input:
+6
+1 2 5 7 9 12
+7
+Output:
+1 2 5 7 7 9 12
+
+Input:
+8
+7 1 2 7 5 9 7 12
+7
+Output:
+7 7 1 2 7 5 9 7 12
+
+import java.util.Scanner;
+
+
+class SLLNode<E> {
+    protected E element;
+    protected SLLNode<E> succ;
+
+    public SLLNode(E elem, SLLNode<E> succ) {
+        this.element = elem;
+        this.succ = succ;
+    }
+
+    @Override
+    public String toString() {
+        return element.toString();
+    }
+}
+
+class SLL<E> {
+    private SLLNode<E> first;
+
+    public SLL() {
+        this.first = null;
+    }
+
+    public void deleteList() {
+        first = null;
+    }
+
+    public int length() {
+        int ret;
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            ret = 1;
+            while (tmp.succ != null) {
+                tmp = tmp.succ;
+                ret++;
+            }
+            return ret;
+        } else
+            return 0;
+
+    }
+
+    @Override
+    public String toString() {
+        String ret = new String();
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            ret += tmp;
+            while (tmp.succ != null) {
+                tmp = tmp.succ;
+                ret += "->" + tmp;
+            }
+        } else
+            ret = "Prazna lista!!!";
+        return ret;
+    }
+
+    public void insertFirst(E o) {
+        SLLNode<E> ins = new SLLNode<E>(o, first);
+        first = ins;
+    }
+
+    public void insertAfter(E o, SLLNode<E> node) {
+        if (node != null) {
+            SLLNode<E> ins = new SLLNode<E>(o, node.succ);
+            node.succ = ins;
+        } else {
+            System.out.println("Dadenot jazol e null");
+        }
+    }
+
+    public void insertBefore(E o, SLLNode<E> before) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            if (first == before) {
+                this.insertFirst(o);
+                return;
+            }
+            while (tmp.succ != before)
+                tmp = tmp.succ;
+            if (tmp.succ == before) {
+                SLLNode<E> ins = new SLLNode<E>(o, before);
+                tmp.succ = ins;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+            }
+        } else {
+            System.out.println("Listata e prazna");
+        }
+    }
+
+    public void insertLast(E o) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while (tmp.succ != null)
+                tmp = tmp.succ;
+            SLLNode<E> ins = new SLLNode<E>(o, null);
+            tmp.succ = ins;
+        } else {
+            insertFirst(o);
+        }
+    }
+
+    public E deleteFirst() {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            first = first.succ;
+            return tmp.element;
+        } else {
+            System.out.println("Listata e prazna");
+            return null;
+        }
+    }
+
+    public E delete(SLLNode<E> node) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            if (first == node) {
+                return this.deleteFirst();
+            }
+            while (tmp.succ != node && tmp.succ.succ != null)
+                tmp = tmp.succ;
+            if (tmp.succ == node) {
+                tmp.succ = tmp.succ.succ;
+                return node.element;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+                return null;
+            }
+        } else {
+            System.out.println("Listata e prazna");
+            return null;
+        }
+    }
+
+    public SLLNode<E> getFirst() {
+        return first;
+    }
+
+    public SLLNode<E> find(E o) {
+       if (first!=null) {
+           SLLNode<E>current=first;
+           while (current.element != o&&current.succ!=null)
+current=current.succ;
+
+           if (current.element==o){
+               return current;
+           }else {
+               System.out.println("Elementot ne postoi vo listata");
+           }
+       }else{
+           System.out.println("Listata e prazna");
+       }
+       return first;
+    }
+    //This is function for reversing the list
+    public void mirror() {
+        if (first!=null) {
+            SLLNode<E> tmp = first;
+            SLLNode<E> newNode = null;
+            SLLNode<E> next;
+            while (tmp!=null){
+                next=tmp.succ;
+                tmp.succ=newNode;
+                newNode=tmp;
+                tmp=next;
+            }
+            first=newNode;
+        }
+    }
+}
+
+public class Main {
+
+    public static void change(SLL<Integer> list, int br) {
+SLLNode<Integer>current=list.getFirst();
+int count=0;
+while (current.succ!=null){
+    if (current.element==br)
+        count++;
+
+    current=current.succ;
+}
+if (count%2!=0){
+    while (current!=null){
+        if (current.element.equals(br)) {
+            list.insertBefore(br, current);
+        break;
+        }
+current=current.succ;
+    }
+
+}
+    }
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        Scanner scan = new Scanner(System.in);
+        int n, broj;
+        SLL<Integer> list1 = new SLL<Integer>();
+        n = scan.nextInt();
+        for(int i = 0; i<n; i++) {
+            list1.insertLast(scan.nextInt());
+        }
+        int br = scan.nextInt();
+        change(list1,br);
+        System.out.println(list1);
+
+
+    }
+}
+
+2.
+Дадена е двојно поврзана листа од двојно поврзани листи. Да се најде сума на секоја од подлистите, а потоа производ на овие суми
+
+Влез:
+Број N кој кажува колку листи има
+Број М кој кажува колку елементи има во секоја листа
+Во следните М линии се податоците 1<=A<=1000 за секоја од листите 
+
+Излез:
+Еден број што е производот на сумите од листите.
+
+Пример:
+
+Влез:
+3
+4
+
+1 2 3 4
+2 3 4 5
+6 7 8 9
+
+Излез:
+4200
+
+/
+
+A double linked list of double linked lists is given. Find the sum of each sub-list, and then the product of all those sums.
+
+Input:
+An integer N that tells us how many lists there are.
+An integer M that tells us how many elements there are in each list.
+
+Output:
+The product of the sums of the sub-lists.
+
+Example:
+
+Input:
+3
+4
+
+1 2 3 4
+2 3 4 5
+6 7 8 9
+
+Output:
+1400
+import java.util.Scanner;
+
+class DLLNode<E> {
+	protected E element;
+	protected DLLNode<E> pred, succ;
+
+	public DLLNode(E elem, DLLNode<E> pred, DLLNode<E> succ) {
+		this.element = elem;
+		this.pred = pred;
+		this.succ = succ;
+	}
+
+	@Override
+	public String toString() {
+		return "<-" + element.toString() + "->";
+	}
+}
+
+class DLL<E> {
+	private DLLNode<E> first, last;
+
+	public DLL() {
+		// Construct an empty SLL
+		this.first = null;
+		this.last = null;
+	}
+
+	public void deleteList() {
+		first = null;
+		last = null;
+	}
+
+	public int length() {
+		int ret;
+		if (first != null) {
+			DLLNode<E> tmp = first;
+			ret = 1;
+			while (tmp.succ != null) {
+				tmp = tmp.succ;
+				ret++;
+			}
+			return ret;
+		} else
+			return 0;
+
+	}
+
+	public void insertFirst(E o) {
+		DLLNode<E> ins = new DLLNode<E>(o, null, first);
+		if (first == null)
+			last = ins;
+		else
+			first.pred = ins;
+		first = ins;
+	}
+
+	public void insertLast(E o) {
+		if (first == null)
+			insertFirst(o);
+		else {
+			DLLNode<E> ins = new DLLNode<E>(o, last, null);
+			last.succ = ins;
+			last = ins;
+		}
+	}
+
+	public void insertAfter(E o, DLLNode<E> after) {
+		if (after == last) {
+			insertLast(o);
+			return;
+		}
+		DLLNode<E> ins = new DLLNode<E>(o, after, after.succ);
+		after.succ.pred = ins;
+		after.succ = ins;
+	}
+
+	public void insertBefore(E o, DLLNode<E> before) {
+		if (before == first) {
+			insertFirst(o);
+			return;
+		}
+		DLLNode<E> ins = new DLLNode<E>(o, before.pred, before);
+		before.pred.succ = ins;
+		before.pred = ins;
+	}
+
+	public E deleteFirst() {
+		if (first != null) {
+			DLLNode<E> tmp = first;
+			first = first.succ;
+			if (first != null) first.pred = null;
+			if (first == null)
+				last = null;
+			return tmp.element;
+		} else
+			return null;
+	}
+
+	public E deleteLast() {
+		if (first != null) {
+			if (first.succ == null)
+				return deleteFirst();
+			else {
+				DLLNode<E> tmp = last;
+				last = last.pred;
+				last.succ = null;
+				return tmp.element;
+			}
+		}
+		// else throw Exception
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		String ret = new String();
+		if (first != null) {
+			DLLNode<E> tmp = first;
+			ret += tmp + "<->";
+			while (tmp.succ != null) {
+				tmp = tmp.succ;
+				ret += tmp + "<->";
+			}
+		} else
+			ret = "Prazna lista!!!";
+		return ret;
+	}
+
+	public DLLNode<E> getFirst() {
+		return first;
+	}
+
+	public DLLNode<E> getLast() {
+
+		return last;
+	}
+
+}
+
+public class ListaOdListi {
+
+    public static long findMagicNumber(DLL<DLL<Integer>> list) {
+		//Vashiot kod tuka...
+		long produst=1;
+        DLLNode<DLL<Integer>>outerNode=list.getFirst();
+        while (outerNode!=null){
+            long sum=0;
+            DLLNode<Integer> innerNode = outerNode.element.getFirst();
+            while (innerNode!=null){
+                sum+=innerNode.element;
+                innerNode=innerNode.succ;
+            }
+produst*=sum;
+            outerNode=outerNode.succ;
+
+        }
+return produst;
+	}
+    
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		int n = in.nextInt();
+		int m = in.nextInt();
+		DLL<DLL<Integer>> list = new DLL<DLL<Integer>>();
+		for (int i = 0; i < n; i++) {
+			DLL<Integer> tmp = new DLL<Integer>();
+			for (int j = 0; j < m; j++) {
+				tmp.insertLast(in.nextInt());
+			}
+			list.insertLast(tmp);
+		}
+		in.close();
+		System.out.println(findMagicNumber(list));
+	}
+
+}
+
+3.
+На автобуската станица во ФинТаун имало N возрасни и M деца кои што сакале да патуваат заедно за соседниот град МинТаун. Цената на еден билет е 100 денари. Ако некој возрасен сака да патува со K деца,
+треба да плати еден билет за него и K-1 билети за децата (за едно дете не мора да плаќа билет). Исто така, возрасен може да се вози и сам, во тој случај ќе си плати еден билет за него. 
+Дополнително знаеме дека децата не можат да се возат без да се придружени од некој возрасен.
+
+Во првиот ред од влезот е даден бројот N. Во вториот ред е даден бројот M. Потребно е да пресметате колкав е минималниот и максималниот број на денари што може да ги платат патниците за
+билети и да ги испечатите во две линии. Во автобусот ќе има најмалку еден возрасен.
+
+/
+
+There were N adults and M children that wanted to travel from the bus station in FinTown to the neighbouring city MinTown. The price of one ticket is 100 den. If an adult wants to travel with K children,
+he would need to pay one ticket for him and K-1 tickets for the children (the ticket for one of the children is free). The adults can also travel by themselves, in which case they only pay one ticket. 
+Additionally we know that the children can't travel without being accompanied by an adult.
+
+In the first row the number N is given, and then in the second row the number M. You need to calculate the minimum and the maximum value in den. that the passengers can pay for their tickets,
+and print them in two separate lines. There will be at least one adult in the bus.
+
+For example:
+Input 	
+4
+10
+
+Result
+1000
+1300
+
