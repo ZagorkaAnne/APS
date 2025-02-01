@@ -509,3 +509,153 @@ Result
 1000
 1300
 
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+     Scanner scanner=new Scanner(System.in);
+     int N=scanner.nextInt();
+     int M=scanner.nextInt();
+     int maxcost;
+     if (M>0){
+         maxcost=N*100+(M-1)*100;
+     }else{
+         maxcost=N*100;
+     }
+     int mincost;
+     if (M==0){
+         mincost=N*100;
+     }else {
+         mincost=N*100+Math.max(0,M-N)*100;
+     }
+        System.out.println(maxcost);
+        System.out.println(mincost);
+    }
+
+}
+
+4.
+Најди ја најдолгата опаѓачка секвенца во една низа. Броевите во секвенцата не мора да се наоѓаат на последователни индекси во низата.
+/
+Find the longest decreasing sequence in an array. The numbers in the sequence don't need to be on consecutive indices in the array.
+
+For example:
+Input 	
+8
+1 2 3 4 5 6 7 8
+
+Result
+1
+
+import java.util.Scanner;
+
+
+public class LDS {
+	
+  public static int findLDS(int[] arr) {
+        int n = arr.length;
+        int[] dp = new int[n];
+        int maxLength = 1;
+
+        // Initialize the dp array: every element is a subsequence of length 1
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+        }
+
+        // Calculate the length of the LDS for each element
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (arr[j] > arr[i]) { // Check if we can extend the sequence
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            maxLength = Math.max(maxLength, dp[i]); // Track the maximum length
+        }
+
+        return maxLength;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read input size and array
+        int n = scanner.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        // Find and print the result
+        System.out.println(findLDS(arr));
+    }
+
+
+}
+
+
+5.
+Да се напише алгоритам кој ќе пресметува (евалуира) математички израз составен од броеви и операциите за собирање (+) и множење (*). 
+Забелешка: Операцијата множење има предност пред операцијата собирање. 
+/
+Write an algorithm that will calculate (evaluate) a mathematical expression that consists of numbers and operations for adding (*) and multiplying (*).
+Note: The operation of multiplying has precedence before the operation of adding.
+
+For example:
+Input 	
+2+2*2*2*2*2*2+2*2
+
+Result
+70
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
+
+public class ExpressionEvaluator {
+
+    public static int evaluateExpression(String expression) {
+        Stack<Integer> numbers = new Stack<>();
+        int currentNumber = 0;
+        char operation = '+'; // Default operation is addition
+
+        for (int i = 0; i < expression.length(); i++) {
+            char currentChar = expression.charAt(i);
+
+            // Build the current number if it's a digit
+            if (Character.isDigit(currentChar)) {
+                currentNumber = currentNumber * 10 + (currentChar - '0');
+            }
+
+            // Process operators or the last character
+            if (!Character.isDigit(currentChar) || i == expression.length() - 1) {
+                if (operation == '*') {
+                    numbers.push(numbers.pop() * currentNumber);
+                } else if (operation == '+') {
+                    numbers.push(currentNumber);
+                }
+
+                // Update operation and reset current number
+                operation = currentChar;
+                currentNumber = 0;
+            }
+        }
+
+        // Sum up all the numbers in the stack
+        int result = 0;
+        while (!numbers.isEmpty()) {
+            result += numbers.pop();
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println(evaluateExpression(input.readLine()));
+    }
+}
+
+
+
