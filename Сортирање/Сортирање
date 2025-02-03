@@ -90,3 +90,124 @@ Result
 2 5 5 6 8 10 13 17
 2 5 5 6 8 10 13 17
 2 5 5 6 8 10 13 17
+
+
+3.
+Дадена е една двојно поврзана листa и со N јазли кои во себе содржат по еден природен број. Треба да се сортира листата со помош на сортирањето со меурчиња (bubble sort). 
+Во првиот ред од влезот е даден бројот на јазли во листата, а потоа во вториот ред се дадени јазлите од кои е составена. На излез треба да се испечатат јазлите на сортираната листа.
+Име на класата: BubbleSortDLL
+Забелешка: При реализација на задачата МОРА да се користи дадената структура, а не да користат помошни структури како низи и сл.
+-----------------
+Given is a doubly linked list with N nodes that each contain a natural number. The list should be sorted using bubble sort.
+In the first line of the input, the number of nodes in the list is given, and then in the second line, the nodes of which it is composed are given. The output should print the nodes of the sorted list
+Class Name: BubbleSortDLL
+Note: When performing the task, the given structure MUST be used, and not auxiliary structures such as arrays, etc.
+
+For example:
+Input 	
+8
+6 10 13 5 8 17 2 5
+
+Result
+2 5 5 6 8 10 13 17
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+class Node {
+    int data;
+    Node prev;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+class DoublyLinkedList {
+    Node head;
+
+    // Insert a new node at the end of the list
+    public void append(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            return;
+        }
+        Node temp = head;
+        while (temp.next != null) {
+            temp = temp.next;
+        }
+        temp.next = newNode;
+        newNode.prev = temp;
+    }
+
+    // Bubble sort for doubly linked list
+    public void bubbleSort() {
+        if (head == null) return;
+
+        boolean swapped;
+        Node current;
+
+        do {
+            swapped = false;
+            current = head;
+
+            while (current.next != null) {
+                if (current.data > current.next.data) {
+                    // Swap the data
+                    int temp = current.data;
+                    current.data = current.next.data;
+                    current.next.data = temp;
+                    swapped = true;
+                }
+                current = current.next;
+            }
+        } while (swapped);
+    }
+
+    // Print the doubly linked list
+    public void printList() {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data);
+            if (temp.next != null) {
+                System.out.print(" ");
+            }
+            temp = temp.next;
+        }
+        System.out.println();
+    }
+}
+
+public class BubbleSortDLL {
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+        // Read number of nodes
+        int n = Integer.parseInt(stdin.readLine());
+
+        // Read the node values
+        String[] values = stdin.readLine().split(" ");
+        
+        DoublyLinkedList dll = new DoublyLinkedList();
+
+        // Populate the doubly linked list
+        for (String value : values) {
+            dll.append(Integer.parseInt(value));
+        }
+
+        // Perform bubble sort
+        dll.bubbleSort();
+
+        // Print the sorted list
+        dll.printList();
+    }
+}
+
+
